@@ -1,0 +1,12 @@
++--------------------------------------------------+
+| Test of the Gauss-Jordan method without pivoting |
++--------------------------------------------------+
+numerical solution (x) = [-14.9 -29.5  19.8]
+verification: Ax-b = [1.98972783e-15 1.66533454e-15 4.99600361e-16]
+verification: 2-norm of (Ax-b) = 2.6423392034390778e-15
++--------------------------------------------------+
+| Test of the Gauss-Jordan method without pivoting |
++--------------------------------------------------+
+numerical solution (x) = [ 2.99795955 -2.50125566  6.97002103]
+verification: Ax-b = [0.00000000e+00 0.00000000e+00 1.42108547e-14]
+verification: 2-norm of (Ax-b) = 1.4210854715202004e-14

@@ -1,0 +1,11 @@
++---------------------------+
+| Test of the Jacobi method |
++---------------------------+
+Failed: Maximum number of iterations is exceeded.
++---------------------------+
+| Test of the Jacobi method |
++---------------------------+
+numerical solution (x) = [ 2.99795955 -2.50125566  6.97002103]
+verification: Ax-b = [ 1.93995930e-11  1.26831878e-12 -1.39976919e-11]
+number of iterations = 8
+percent relative error (2-norm) = 6.025680377840913e-11

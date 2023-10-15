@@ -1,0 +1,10 @@
++-----------------------------+
+| Test of the Muller's method |
++-----------------------------+
+numerical solution (x) = 4.0
+verification: f(x) = 0.0
+number of iterations = 4
++-----------------------------+
+| Test of the Muller's method |
++-----------------------------+
+Failed: Maximum number of iterations is exceeded.

@@ -1,0 +1,11 @@
++----------------------------------------------------+
+| Test of the Newton-Raphson method for a 2x2 system |
++----------------------------------------------------+
+numerical solution (x,y) = (1.9999999999999998, 3.0000000000000004)
+verification: u(x,y) = 0.0, v(x,y) = 0.0
+number of iterations = 4
+percent relative error = 2.4868995751603502e-12
++----------------------------------------------------+
+| Test of the Newton-Raphson method for a 2x2 system |
++----------------------------------------------------+
+Failed: Maximum number of iterations is exceeded.

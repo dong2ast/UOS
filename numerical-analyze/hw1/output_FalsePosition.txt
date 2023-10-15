@@ -1,0 +1,18 @@
++-----------------------------------+
+| Test of the False Position method |
++-----------------------------------+
+numerical solution (x) = 14.801135966336357
+verification: f(x) = -4.158751920613213e-08
+number of iterations = 7
+percent relative error = 1.1990838346561366e-06
++-----------------------------------+
+| Test of the False Position method |
++-----------------------------------+
+numerical solution (x) = 0.5671433032063935
+verification: f(x) = 54.126145932058705
+number of iterations = 16
+percent relative error = 4.3897713519046336e-06
++-----------------------------------+
+| Test of the False Position method |
++-----------------------------------+
+Maximum number of iterations is exceeded.
