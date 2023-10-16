@@ -65,7 +65,6 @@ def NewtonRaphson(f, df, x0, maxiter, epsilon):
     while True:
         # 다음 x 좌표 구하기
         x = x_old - fx / dfx
-        print(x)
         if x != 0:
             ea = np.abs((x - x_old) / x) * 100  # - ea: percent relative error (이전 단계의 x 값에 비해 상대적인 오류)
 
@@ -153,12 +152,53 @@ def NewtonRaphson_2x2(u, dudx, dudy, v, dvdx, dvdy, x0, y0, maxiter, epsilon):
 
 
 
-# def Muller(f, xr, h, eps, maxit):
+def Muller(f, xr, h, eps, maxit):
     # f: polynomial function defined in the equation "f(x)=0"
     # xr: initial guess
     # h: value to be used to perturb xr to obtain two more initial guesses (explained on p.187)
     # eps: termination criterion
     # maxit: maximum number of iterations
+
+    i=0
+    xr2 = xr
+    xr1 = xr+h*xr
+    xr0 = xr-h*xr
+    while True:
+        h0 = xr1 - xr0
+        h1 = xr2 - xr1
+        d0 = (f(xr1) - f(xr0)) / h0
+        d1 = (f(xr2) - f(xr1)) / h1
+        a = (d1-d0) / (h1 + h0)
+        b = a * h1 + d1
+        c = f(xr2)
+        rad = (b**2 - 4*a*c)**(1/2)
+        if abs(b + rad) > abs(b - rad):
+            den = b + rad
+        else:
+            den = b - rad
+
+        dxr = -2*c/den
+        x3 = xr2 + dxr
+
+        if abs(dxr) < eps * x3:
+            xr0 = xr1
+            xr1 = xr2
+            xr2 = x3
+            break
+
+        if i >= maxit:
+            return None
+
+        if x3 != 0:
+            ea = abs((x3 - xr2) / x3) * 100
+        if ea < eps:
+            break
+
+        xr0 = xr1
+        xr1 = xr2
+        xr2 = x3
+        i += 1
+    return xr2, i, ea
 
     # return values
     # * If the solution is found, return (x,i,ea) (a 3-tuple) where
