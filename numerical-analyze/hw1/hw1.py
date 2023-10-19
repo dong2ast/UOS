@@ -1,21 +1,20 @@
 import numpy as np
-
+from decimal import Decimal, getcontext
 
 # The codes are to be tested with Python version 3.9
 
 # Bracketing Method로 근 구하기 (y=0이 되는 x 좌표)
 def FalsePosition(f, xl, xu, maxiter, epsilon):
-    i = 0
     fl = f(xl)
     fu = f(xu)
     x = 0
 
-    while True:
-        xrold = x
+    for i in range(maxiter):
+        xr_old = x
         x = xu - fu * (xl - xu) / (fl - fu)
         fr = f(x)
         if x != 0:
-            ea = np.abs((x - xrold) / x) * 100
+            ea = np.abs((x - xr_old) / x) * 100
 
         test = fl * fr
         # 왼쪽 값과 찾은 값 사이에 x축 존재 하는지 구별
@@ -28,14 +27,11 @@ def FalsePosition(f, xl, xu, maxiter, epsilon):
         else:  # 근 발견
             ea = 0
 
-        if i >= maxiter:
-            return None
-
         if ea < epsilon:
-            break
-        i += 1
+            return x, i, ea
 
-    return x, i, ea
+    return None
+
     # f: function defined in the equation "f(x)=0"
     # xl, xu: initial lower/upper bound (defined on p.136)
     # maxiter: maximum iterations
@@ -58,27 +54,23 @@ def FalsePosition(f, xl, xu, maxiter, epsilon):
 
 # Open Method로 근 구하기 (y=0이 되는 x좌표)
 def NewtonRaphson(f, df, x0, maxiter, epsilon):
-    i = 0
     fx = f(x0)
     dfx = df(x0)
     x_old = x0
-    while True:
+    for i in range(maxiter):
         # 다음 x 좌표 구하기
         x = x_old - fx / dfx
         if x != 0:
             ea = np.abs((x - x_old) / x) * 100  # - ea: percent relative error (이전 단계의 x 값에 비해 상대적인 오류)
 
-        if i >= maxiter:
-            return None
         if ea < epsilon:
-            break
+            return x, i, ea
 
         # 다음 반복을 위한 설정
         x_old = x
         fx = f(x)
         dfx = df(x)
-        i += 1
-    return x, i, ea
+    return None
 
     # f: function defined in the equation "f(x)=0"
     # df: derivative of f(x)
@@ -107,7 +99,6 @@ def NewtonRaphson_2x2(u, dudx, dudy, v, dvdx, dvdy, x0, y0, maxiter, epsilon):
     # maxiter: maximum iterations
     # epsilon: termination criterion ("percent relative error" defined in (3.5) on p.62)
     #          both x and y should meet the termination criterion.
-    i = 0
     fu = u(x0, y0)
     fv = v(x0, y0)
     fdudx = dudx(x0, y0)
@@ -116,17 +107,16 @@ def NewtonRaphson_2x2(u, dudx, dudy, v, dvdx, dvdy, x0, y0, maxiter, epsilon):
     fdvdy = dvdy(x0, y0)
     x_old = x0
     y_old = y0
-    while True:
+    for i in range(maxiter):
         # 다음 x 좌표 구하기
         x = x_old - ((fu * fdvdy) - (fv * fdudy)) / ((fdudx * fdvdy) - (fdudy * fdvdx))
         y = y_old - ((fv * fdudx) - (fu * fdvdx)) / ((fdudx * fdvdy) - (fdudy * fdvdx))
         if x != 0 and y != 0:
             ea = max(abs((x - x_old) / x) * 100,
                      abs((y - y_old) / y) * 100)  # - ea: percent relative error (이전 단계의 x 값에 비해 상대적인 오류)
-        if i >= maxiter:
-            return None
+
         if ea < epsilon:
-            break
+            return x, y, i, ea
 
         # 다음 반복을 위한 설정
         x_old = x
@@ -137,8 +127,8 @@ def NewtonRaphson_2x2(u, dudx, dudy, v, dvdx, dvdy, x0, y0, maxiter, epsilon):
         fdudy = dudy(x, y)
         fdvdx = dvdx(x, y)
         fdvdy = dvdy(x, y)
-        i += 1
-    return x, y, i, ea
+
+    return None
 
     # return values
     # * If the solution is found, return (x,y,i,ea) (a 4-tuple) where
@@ -159,11 +149,10 @@ def Muller(f, xr, h, eps, maxit):
     # eps: termination criterion
     # maxit: maximum number of iterations
 
-    i=0
     xr2 = xr
     xr1 = xr+h*xr
     xr0 = xr-h*xr
-    while True:
+    for i in range(maxit):
         h0 = xr1 - xr0
         h1 = xr2 - xr1
         d0 = (f(xr1) - f(xr0)) / h0
@@ -180,25 +169,15 @@ def Muller(f, xr, h, eps, maxit):
         dxr = -2*c/den
         x3 = xr2 + dxr
 
-        if abs(dxr) < eps * x3:
-            xr0 = xr1
-            xr1 = xr2
-            xr2 = x3
-            break
-
-        if i >= maxit:
-            return None
-
         if x3 != 0:
             ea = abs((x3 - xr2) / x3) * 100
-        if ea < eps:
-            break
 
-        xr0 = xr1
-        xr1 = xr2
-        xr2 = x3
-        i += 1
-    return xr2, i, ea
+        xr0, xr1, xr2 = xr1, xr2, x3
+
+        if ea < eps or abs(dxr) < eps * x3:
+            return xr2, i, ea
+
+    return None
 
     # return values
     # * If the solution is found, return (x,i,ea) (a 3-tuple) where
@@ -219,16 +198,23 @@ def Muller(f, xr, h, eps, maxit):
     #   (2) i>=maxit   --> failed case
     #   When you implement the Muller's method, you have to handle the cases separately.
 
-    # def GaussJordan(A,b):
+def GaussJordan(A,b):
     # Solve the linear system "Ax=b"
 
     # The following two lines are pre-implemented to provide you
     # the corresponding values in the pseudocode.
 
-    """
     aug = np.hstack((A,b.reshape((b.shape[0], 1))))
     m,n = aug.shape
-    """
+    for k in range(m):
+        d = aug[k, k]
+        aug[k,:] = aug[k, :]/d # pivot 값 1로 만들기
+        for i in range(m):
+            if i != k:
+                d = aug[i, k] # pivot 열과 같은 열의 값들
+                aug[i, k:] = aug[i, k:] - d*aug[k, k:] # 모든 행에서 pivot 우측 열들에 대해 - d * pivot행 행렬의 뺄셈 진행
+                # pivot 행 외에 0으로 만들어 주는 작업
+    return np.array(aug[:, n-1])
 
     # aug: The augmented matrix [A|b]
     # m: number of rows of "aug"
@@ -243,15 +229,29 @@ def Muller(f, xr, h, eps, maxit):
     #     (Refer to "Fig_9_6_Gauss.py".)
     #     https://numpy.org/doc/stable/user/basics.indexing.html
 
-# def Jacobi(A, b, x0, maxiter, epsilon):
-# Solve the linear system "Ax=b"
-# x0: initial guess
-# maxiter: number of maximum iterations
-# epsilon: termination criterion
+def Jacobi(A, b, x0, maxiter, epsilon):
+    # Solve the linear system "Ax=b"
+    # x0: initial guess
+    # maxiter: number of maximum iterations
+    # epsilon: termination criterion
 
-# TODO: Implement the Jacobi method.
-# Whenever possible, remove a loop and replace it with numpy indexing syntax.
-# (Refer to "Fig_9_6_Gauss.py".)
-# https://numpy.org/doc/stable/user/basics.indexing.html
+    x = x0.copy()
 
-# Bonus points: If you use ONLY ONE loop (for iterations), you can get extra points!
+    D = np.diag(A)
+    R = A - np.diagflat(D)
+    for i in range(maxiter):
+        x_old = x
+        x = (b - np.dot(R,x)) / D
+
+        ea = np.linalg.norm(x - x_old) / np.linalg.norm(x)
+        if ea < epsilon:
+            return x, i, ea
+
+    return None
+
+    # TODO: Implement the Jacobi method.
+    # Whenever possible, remove a loop and replace it with numpy indexing syntax.
+    # (Refer to "Fig_9_6_Gauss.py".)
+    # https://numpy.org/doc/stable/user/basics.indexing.html
+
+    # Bonus points: If you use ONLY ONE loop (for iterations), you can get extra points!
