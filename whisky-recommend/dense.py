@@ -6,18 +6,21 @@ def dense():
     cos = pd.read_csv("./csv/cos_sim_by_name.csv")
     cos.set_index('name', inplace=True)
 
-    col = ud.iloc[:, 1]
-    df_concat = cos[col[0]]
-
-    for i in range(1, 5):
-        df_concat += cos[col[i]]
-    df_concat /= 5
-
-    result = df_concat.to_frame().T
+    result = initial_setting(cos, ud)
 
     # make_dense(cos, result, ud)
 
     result.to_csv("./csv/test.csv", encoding='utf-8-sig')
+
+
+def initial_setting(cos, ud):
+    col = ud.iloc[:, 1]
+    df_concat = cos[col[0]]
+    for i in range(1, 5):
+        df_concat += cos[col[i]]
+    df_concat /= 5
+    result = df_concat.to_frame().T
+    return result
 
 
 def make_dense(cos, result, ud):
