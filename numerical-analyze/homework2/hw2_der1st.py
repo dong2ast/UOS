@@ -17,27 +17,27 @@ def forward_diff_2_points(f, x, h):
 # Two-Points Backward Difference Formula
 def backward_diff_2_points(f, x, h):
 # TODO: Remove the following line and fill in the correct code.
-    return np.zeros((len(h),))
+    return (f(x)-f(x-h))/h
 
 # Two-Points Central Difference Formula
 def central_diff_2_points(f, x, h):
 # TODO: Remove the following line and fill in the correct code.
-    return np.zeros((len(h),))
+    return (f(x+h)-f(x-h))/(2*h)
 
 # Three-Points Forward Difference Formula
 def forward_diff_3_points(f, x, h):
 # TODO: Remove the following line and fill in the correct code.
-    return np.zeros((len(h),))
+    return (-f(x+2*h)+4*f(x+h)-3*f(x))/(2*h)
 
 # Three-Points Backward Difference Formula
 def backward_diff_3_points(f, x, h):
 # TODO: Remove the following line and fill in the correct code.
-    return np.zeros((len(h),))
+    return (3*f(x)-4*f(x-h)+f(x-2*h))/(2*h)
 
 # Four-Points Central Difference Formula
 def central_diff_4_points(f, x, h):
 # TODO: Remove the following line and fill in the correct code.
-    return np.zeros((len(h),))
+    return (f(x-2*h)-8*f(x-h)+8*f(x+h)-f(x+2*h))/(12*h)
 
 
 
