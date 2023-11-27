@@ -15,18 +15,25 @@ def dense():
 
 def initial_setting(cos, ud):
     col = ud.iloc[:, 1]
-    df_concat = cos[col[0]]
+    df_concat = cos[col[0]].copy()
+
     for i in range(1, 5):
         df_concat += cos[col[i]]
+
     df_concat /= 5
+
+    for n in col:
+        df_concat.loc[n] = 1.0
+
     result = df_concat.to_frame().T
+
     return result
 
 
 def make_dense(cos, result, ud):
     for i in range(2, len(ud.columns)):
         col = ud.iloc[:, i]  # 1명의 유저
-        df_concat = cos[col[0]]  # 1 위스키에 대한 상대적 유사도
+        df_concat = cos[col[0]].copy()  # 1 위스키에 대한 상대적 유사도
 
         size = 5
 
@@ -37,6 +44,10 @@ def make_dense(cos, result, ud):
             df_concat += cos[col[j]]  # 5 위스키의 상대적 유사도의 합
 
         df_concat /= size  # 5로 나눔
+
+        for n in col:
+            df_concat[n] = 1.0
+
         result._append(df_concat, ignore_index=True)  # result dataframe에 추가
 
         print(i)
