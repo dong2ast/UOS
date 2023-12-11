@@ -11,7 +11,6 @@ result = 0
 for i in range(len(td)):
     t = pd.Series.sort_values(df.iloc[i], ascending=False).index.to_numpy()
     temp = 0
-
     for k in td.iloc[i, :][3:5]:
         temp += np.where(t == str(k))[0][0]
 

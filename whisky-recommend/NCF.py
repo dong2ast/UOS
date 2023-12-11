@@ -50,7 +50,7 @@ model = Model(inputs=[user_input, item_input], outputs=output)
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # 모델 훈련
-model.fit([train_user_input, train_item_input], train_labels, epochs=30, batch_size=64,
+model.fit([train_user_input, train_item_input], train_labels, epochs=10, batch_size=64,
           validation_data=([test_user_input, test_item_input], test_labels))
 
 model.save("ncf_model.keras")
