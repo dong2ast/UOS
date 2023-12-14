@@ -3,25 +3,34 @@ import numpy as np
 
 MAX = 6654
 
-df = pd.read_csv('./csv/cf_result.csv')
-
-testdata = list(map(int,input().split()))
+df = pd.read_csv('./csv/cf_result.csv', index_col="index")
+td = pd.read_csv('./csv/test_data.csv').T
 
 arr = df.to_numpy()
+ar2 = td.to_numpy()
 
-rank = [[0,i]for i in range(MAX)]
-#
-for j in testdata[:3]:
-    for i in range(6654):
-        rank[i][0] += arr[i,j]
-rank.sort(reverse=True)
+result = 0
 
-print(rank[:5])
-print(rank[-6:-1])
-for i in range(MAX):
-    if testdata[3] == rank[i][1]:
-        print(f"{testdata[3]} ranked {i+1}")
-    if testdata[4] == rank[i][1]:
-        print(f"{testdata[4]} ranked {i+1}")
+for k in ar2:
+    rank = [[0, i] for i in range(MAX)]
+    temp = 0
 
-print(arr[6100,5521])
+    for j in k[:3]:
+        for i in range(6654):
+            rank[i][0] += arr[i, j]
+    rank.sort(reverse=True)
+
+    print("-----------------------base insert-----------------------")
+
+    for j in range(MAX):
+        if rank[j][1] == k[3] or rank[j][1] == k[4]:
+            print(j)
+            temp += j
+    print(temp/2)
+    result += temp/2
+
+result /= len(ar2)
+
+print(result)
+
+
