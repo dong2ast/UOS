@@ -2,14 +2,11 @@
 #define F_CPU 16000000UL
 
 #include <avr/io.h>
-#include <avr/interrupt.h>
 #include <util/delay.h>
 #include <stdbool.h>
 
 #define SERVO_DEG_P60 500
 #define SERVO_DEG_M60 250
-
-volatile bool trigger = false;
 
 void timer_init()
 {
@@ -17,16 +14,6 @@ void timer_init()
 	TCCR1B = 0x1B;
 	ICR1 = 4999;
 	OCR1A = 375;
-}
-
-SIGNAL(INT4_vect)
-{
-	trigger = true;
-}
-
-SIGNAL(INT5_vect)
-{
-	trigger = false;
 }
 
 unsigned char getchar0() {
@@ -51,17 +38,10 @@ void init(){
 	UCSR0B = (1 << RXEN0) | (1 << TXEN0); // RXEN0, TXEN0 비트를 설정하여 송수신 활성화
 	UCSR0C = (1 << UCSZ01) | (1 << UCSZ00); // UCSZ01, UCSZ00 비트를 설정하여 프레임 포맷 설정
 
-	DDRA = 0xff; // 포트 A를 출력으로 설정
-	
 	DDRB = 0xFF;
-	DDRE = 0xcf;
 	PORTB = 0x00;
 	
 	timer_init();
-	
-	EICRB = 0x0A; // INT4 = falling edge
-	EIMSK = 0x30; // INT4 interrupt enable
-	SREG |= 1<<7;
 }
 
 int main(void) {
